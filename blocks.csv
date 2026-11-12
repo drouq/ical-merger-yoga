@@ -3,3 +3,4 @@ start,end,label
 # Example: nights of 10 and 11 Dec 2026 -> start 2026-12-10, end 2026-12-12
 # Leave end empty to block a single day. Lines starting with # are ignored.
 2026-12-18,2028-12-31,Block
+2027-02-05,2027-02-07,Test
