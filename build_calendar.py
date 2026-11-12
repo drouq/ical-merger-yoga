@@ -8,11 +8,16 @@ Env vars:
 import csv
 import os
 import sys
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 
 import requests
 from icalendar import Calendar, Event
+
+# Times copied from the source feed (UTC): bookings start 07:00Z (15:00 Bali) and end 04:00Z (12:00 Bali).
+# Manual blocks use the same times so they look like the source events.
+START_TIME_UTC = time(7, 0)
+END_TIME_UTC = time(4, 0)
 
 
 def load_source():
@@ -64,10 +69,9 @@ def main():
         ev = Event()
         ev.add("uid", f"manual-{start.isoformat()}-{end.isoformat()}@merged-calendar")
         ev.add("dtstamp", now)
-        ev.add("dtstart", start)
-        ev.add("dtend", end)
+        ev.add("dtstart", datetime.combine(start, START_TIME_UTC, tzinfo=timezone.utc))
+        ev.add("dtend", datetime.combine(end, END_TIME_UTC, tzinfo=timezone.utc))
         ev.add("summary", label)
-        ev.add("transp", "OPAQUE")
         out.add_component(ev)
 
     name = os.environ.get("OUTPUT_NAME", "calendar").strip() or "calendar"
